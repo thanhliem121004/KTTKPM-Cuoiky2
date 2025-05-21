@@ -1,0 +1,274 @@
+﻿@model CouponModel
+@{
+    ViewData["title"] = "Tạo mã giảm";
+}
+
+<div id="snow-container"></div>
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Quản lý mã giảm giá</h3>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Thêm mã giảm mới</h5>
+                    <form asp-action="Create" autocomplete="off" asp-controller="Coupon" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label">Tên</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="form-label">Mô tả</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="DayStart" class="form-label">Ngày bắt đầu</label>
+                            <input asp-for="DayStart" class="form-control" type="date" />
+                            <span asp-validation-for="DayStart" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="DayExpired" class="form-label">Ngày kết thúc</label>
+                            <input asp-for="DayExpired" class="form-control" type="date" />
+                            <span asp-validation-for="DayExpired" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Status" class="form-label">Trạng thái</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="1">Hiển thị</option>
+                                <option value="0">Ẩn</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-custom">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Danh sách mã giảm</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="mytable">
+                            <thead>
+                                <tr>
+                                    <th>Tên mã giảm</th>
+                                    <th>Mô tả</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Số lượng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thời gian còn lại</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var coupon in ViewBag.Coupon)
+                                {
+                                    <tr>
+                                        <td>@coupon.Name</td>
+                                        <td>@coupon.Description</td>
+                                        <td>@coupon.DayStart.ToString("dd-MM-yyyy")</td>
+                                        <td>@coupon.DayExpired.ToString("dd-MM-yyyy")</td>
+                                        <td>@coupon.Quantity</td>
+                                        <td>
+                                            <select name="Status" class="form-select form-select-sm">
+                                                @if (coupon.Status == 1)
+                                                {
+                                                    <option value="1" selected>Kích hoạt</option>
+                                                    <option value="0">Ẩn</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="1">Kích hoạt</option>
+                                                    <option value="0" selected>Ẩn</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            @if (coupon.DayExpired < DateTime.Now)
+                                            {
+                                                <span class="badge bg-danger">Hết hạn</span>
+                                            }
+                                            else
+                                            {
+                                                TimeSpan remainingTime = coupon.DayExpired - DateTime.Now;
+                                                int daysRemaining = remainingTime.Days;
+                                                if (daysRemaining == 0)
+                                                {
+                                                    <span class="badge bg-warning">Hôm nay</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">@daysRemaining ngày</span>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-fluid {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h3 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    }
+
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
+    #snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .snowflake {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+    }
+
+    @@keyframes fall {
+        0% {
+            transform: translateY(-5vh) rotate(0deg);
+        }
+        100% {
+            transform: translateY(105vh) rotate(360deg);
+        }
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.width = `${Math.random() * 10 + 5}px`;
+            snowflake.style.height = snowflake.style.width;
+            snowflake.style.left = `${Math.random() * window.innerWidth}px`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            snowflake.style.opacity = Math.random();
+            return snowflake;
+        }
+
+        function snowfall() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflake = createSnowflake();
+            snowContainer.appendChild(snowflake);
+
+            snowflake.style.animation = `fall ${snowflake.style.animationDuration} linear`;
+
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
+
+        setInterval(snowfall, 100);
+    </script>
+}

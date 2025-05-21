@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Status</title>
+</head>
+<body>
+    <h2>Session Status</h2>
+    <div id="status"></div>
+
+    <script>
+        function updateStatus() {
+            fetch('/api/Test/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status').innerHTML = `
+                        <p>User ID: ${data.userId || 'Not logged in'}</p>
+                        <p>Last Activity: ${data.lastActivity || 'N/A'}</p>
+                        <p>Current Time: ${data.currentTime}</p>
+                        <p>Time Remaining: ${data.timeRemaining.toFixed(2)} minutes</p>
+                    `;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        updateStatus();
+        setInterval(updateStatus, 5000);  // Update every 5 seconds
+    </script>
+</body>
+</html>

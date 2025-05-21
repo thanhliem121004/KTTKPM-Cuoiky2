@@ -1,0 +1,140 @@
+﻿@model SanPhamModel
+@{
+    ViewData["title"] = "Thêm sản phẩm";
+}
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Thêm sản phẩm</h3>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Giá sản phẩm</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Thể loại</label>
+                    <select asp-for="TheLoaiId" class="form-select" asp-items="ViewBag.TheLoai">
+                        <option>--Chọn 1 thể loại</option>
+                    </select>
+                    <span asp-validation-for="TheLoaiId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Thương hiệu</label>
+                    <select asp-for="ThuongHieuId" class="form-select" asp-items="ViewBag.ThuongHieu">
+                        <option>--Chọn 1 thương hiệu</option>
+                    </select>
+                    <span asp-validation-for="ThuongHieuId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Hình ảnh</label>
+                    <input asp-for="ImageUpload" class="form-control" />
+                    <span asp-validation-for="ImageUpload" class="text-danger"></span>
+                    <img id="imgpreview" class="img-thumbnail mt-2" style="max-width: 200px; display: none;" />
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-custom">Thêm</button>
+                    <a asp-action="Index" class="btn btn-secondary">Trở về danh sách sản phẩm</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgpreview').attr('src', e.target.result).css('display', 'block');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#ImageUpload").change(function () {
+            readURL(this);
+        });
+
+        CKEDITOR.replace('Description', {
+            enterMode: CKEDITOR.ENTER_BR,
+            shiftEnterMode: CKEDITOR.ENTER_P,
+            autoParagraph: false
+        });
+
+        CKEDITOR.on('instanceReady', function (ev) {
+            ev.editor.dataProcessor.writer.setRules('p', {
+                indent: false,
+                breakBeforeOpen: false,
+                breakAfterOpen: false,
+                breakBeforeClose: false,
+                breakAfterClose: false
+            });
+        });
+    </script>
+}

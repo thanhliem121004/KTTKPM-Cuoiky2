@@ -1,0 +1,108 @@
+﻿<div class="sidebar">
+    <div class="sidebar-section">
+        <h3 class="sidebar-title"><i class="fas fa-list-ul me-2"></i>Phân loại</h3>
+        <div class="category-list">
+            <vc:the-loai></vc:the-loai>
+        </div>
+    </div>
+
+    <div class="sidebar-section">
+        <h3 class="sidebar-title"><i class="fas fa-tag me-2"></i>Thương hiệu</h3>
+        <div class="brand-list">
+            <vc:thuong-hieu></vc:thuong-hieu>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        padding: 20px;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+        max-width: 280px;
+    }
+
+        .sidebar:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+    .sidebar-section {
+        margin-bottom: 25px;
+    }
+
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--primary-color);
+        position: relative;
+    }
+
+        .sidebar-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+    .category-list, .brand-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .category-list li, .brand-list li {
+            margin-bottom: 10px;
+        }
+
+        .category-list a, .brand-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .category-list a::before, .brand-list a::before {
+                content: '';
+                position: absolute;
+                left: -100%;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--primary-color);
+                opacity: 0.1;
+                transition: all 0.3s ease;
+            }
+
+            .category-list a:hover::before, .brand-list a:hover::before {
+                left: 0;
+            }
+
+            .category-list a:hover, .brand-list a:hover {
+                color: var(--primary-color);
+                transform: translateX(5px);
+            }
+
+            .category-list a i, .brand-list a i {
+                margin-right: 10px;
+                color: var(--primary-color);
+                transition: all 0.3s ease;
+            }
+
+            .category-list a:hover i, .brand-list a:hover i {
+                transform: scale(1.2);
+            }
+</style>

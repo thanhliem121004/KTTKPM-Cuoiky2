@@ -1,0 +1,98 @@
+﻿@model AppUserModel
+@{
+    ViewData["title"] = "Tạo User";
+}
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Thêm User</h3>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Tên User</label>
+                    <input asp-for="UserName" required class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" required class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input asp-for="PhoneNumber" required class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input asp-for="PasswordHash" required class="form-control" type="password" />
+                    <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Vai trò</label>
+                    <select asp-for="RoleId" class="form-select" asp-items="ViewBag.Roles">
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-custom">Thêm</button>
+                    <a asp-action="Index" class="btn btn-secondary">Trở về danh sách User</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

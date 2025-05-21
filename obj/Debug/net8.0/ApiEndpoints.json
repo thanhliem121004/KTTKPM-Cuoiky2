@@ -1,0 +1,22 @@
+[
+  {
+    "ContainingType": "E_commerceTechnologyWebsite.Controllers.TestController",
+    "Method": "Status",
+    "RelativePath": "api/Test/status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "E_commerceTechnologyWebsite.Controllers.TestController",
+    "Method": "TestRateLimit",
+    "RelativePath": "api/Test/test-rate-limit",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

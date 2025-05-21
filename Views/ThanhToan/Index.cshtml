@@ -1,0 +1,144 @@
+﻿@model ThanhToanViewModel
+
+<div class="container-fluid bg-gray">
+    <div class="container py-4">
+        <h1 class="text-center mb-4">Thanh toán</h1>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="Index" asp-controller="ThanhToan" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">Thông tin khách hàng</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="FullName" class="form-label">Họ và tên</label>
+                                <input asp-for="FullName" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" type="email" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="PhoneNumber" class="form-label">Số điện thoại</label>
+                                <input asp-for="PhoneNumber" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label">Địa chỉ</label>
+                                <textarea asp-for="Address" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">Thông tin đơn hàng</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="my-0">@item.ProductName</h6>
+                                            <small class="text-muted">Số lượng: @item.Quantity</small>
+                                        </div>
+                                        <span class="text-muted">@item.Price.ToString("N0") ₫</span>
+                                    </li>
+                                }
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Tổng tiền hàng</span>
+                                    <strong>@Model.TotalAmount.ToString("N0") ₫</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Phí vận chuyển</span>
+                                    <strong>@Model.ShippingFee.ToString("N0") ₫</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Tổng cộng</span>
+                                    <strong>@Model.GrandTotal.ToString("N0") ₫</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Xác nhận đặt hàng</button>
+                </div>
+            </div>
+        </form>
+        <td>
+            <form method="post" asp-action="CreatePaymentMomo" asp-controller="Payment">
+                <input type="hidden" name="amount" value="@Model.GrandTotal" />
+                <input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+                <input type="hidden" name="orderInfo" value="Thanh toán Momo cho đơn hàng tại Shop_Tech" />
+                <input type="hidden" name="FullName" value="ShopTech" />
+                <button class="btn btn-danger" name="PayUrl "type="submit">Thanh toán MOMO</button>
+            </form>
+        </td>
+    </div>
+</div>
+<style>
+    body {
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+    }
+
+    .bg-gray {
+        background-color: #f4f4f4;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .btn-primary {
+        background-color: #fdd504;
+        border-color: #fdd504;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .btn-primary:hover {
+        background-color: #fcc500;
+        border-color: #fcc500;
+        color: #333;
+    }
+
+    .form-control:focus {
+        border-color: #fdd504;
+        box-shadow: 0 0 0 0.2rem rgba(253, 213, 4, 0.25);
+    }
+
+    .list-group-item {
+        background-color: transparent;
+        border: none;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .bg-primary {
+        background-color: #fdd504 !important;
+    }
+
+    .text-white {
+        color: #333 !important;
+    }
+</style>

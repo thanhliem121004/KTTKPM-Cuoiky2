@@ -1,0 +1,158 @@
+﻿@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+}
+
+<div class="profile-container">
+    <h2 class="profile-title">@ViewData["Title"]</h2>
+
+    <div class="profile-card">
+        <div class="profile-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="profile-info">
+            <div class="info-group">
+                <label>Tên đăng nhập:</label>
+                <span>@Model.Username</span>
+            </div>
+            <div class="info-group">
+                <label>Email:</label>
+                <span>@Model.Email</span>
+            </div>
+            <div class="info-group">
+                <label>Số điện thoại:</label>
+                <span>@Model.PhoneNumber</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a asp-action="EditProfile" class="btn btn-primary">Chỉnh sửa thông tin</a>
+        <a asp-action="ChangePassword" class="btn btn-secondary">Đổi mật khẩu</a>
+    </div>
+</div>
+<style>
+        :root {
+        --primary-color: #ffd400;
+        --secondary-color: #333333;
+        --text-color: #333333;
+        --background-color: #f4f4f4;
+        --white: #ffffff;
+    }
+
+    body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-title {
+        color: var(--secondary-color);
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .profile-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar i {
+        font-size: 80px;
+        color: var(--primary-color);
+    }
+
+    .profile-info .info-group {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-info label {
+        font-weight: bold;
+        width: 150px;
+        color: var(--secondary-color);
+    }
+
+    .profile-info span {
+        flex: 1;
+    }
+
+    .profile-actions {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #e6bf00;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #4d4d4d;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: var(--secondary-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>

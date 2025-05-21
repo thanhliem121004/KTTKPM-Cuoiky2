@@ -1,0 +1,257 @@
+﻿@using E_commerceTechnologyWebsite.Models.ViewModel
+@model GioHangViewModel
+
+<div class="container mt-4">
+    <h2 class="mb-4 section-title">Giỏ hàng của bạn</h2>
+
+    @if (Model.GioHang.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng cộng</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GioHang)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="~/media/products/@item.Image" alt="@item.ProductName" class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: contain;">
+                                    <div>
+                                        <h6 class="mb-0">@item.ProductName</h6>
+                                        <small class="text-muted">Mã SP: @item.ProductId</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@item.Price.ToString("N0") ₫</td>
+                            <td>
+                                <div class="quantity-control">
+                                    <a class="btn btn-outline-secondary btn-sm" asp-controller="GioHang" asp-action="Giam" asp-route-id="@item.ProductId">-</a>
+                                    <input type="text" class="form-control form-control-sm mx-2" value="@item.Quantity" style="width: 50px; text-align: center;" readonly>
+                                    <a class="btn btn-outline-secondary btn-sm" asp-controller="GioHang" asp-action="Tang" asp-route-id="@item.ProductId">+</a>
+                                </div>
+                            </td>
+                            <td>@((item.Quantity * item.Price).ToString("N0")) ₫</td>
+                            <td>
+                                <a class="btn btn-danger btn-sm" asp-controller="GioHang" asp-action="Xoa" asp-route-id="@item.ProductId">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng cộng</h5>
+                        <p class="card-text">
+                            <strong>Tổng tiền hàng:</strong>
+                            <span class="float-end">@Model.TongTien.ToString("N0") ₫</span>
+                        </p>
+
+                        <p class="card-text">
+                            <strong>Phí vận chuyển:</strong>
+                            <span class="float-end" id="shippingPrice">0 ₫</span>
+                        </p>
+
+                        <form id="couponForm">
+                            <div class="form-group">
+                                <label for="couponInput">Mã giảm giá:</label>
+                                <input type="text" class="form-control coupon-value" id="couponInput" />
+                            </div>
+                            <span class="text text-success">@Model.CouponCode</span><br />
+                            <button type="button" class="btn btn-sm btn-primary btn-apply-coupon">Áp dụng</button>
+                        </form>
+
+                        <hr>
+                        <p class="card-text">
+                            <strong>Tổng cộng:</strong>
+                            <span class="float-end" id="totalPrice">@Model.TongTien.ToString("N0") ₫</span>
+                        </p>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Chọn Tỉnh/Thành</label>
+                            <select class="css_select form-select" id="tinh" name="tinh">
+                                <option value="0">Tỉnh/Thành</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Chọn Quận/Huyện</label>
+                            <select class="css_select form-select" id="quan" name="quan">
+                                <option value="0">Quận/Huyện</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Chọn Phường/Xã</label>
+                            <select class="css_select form-select" id="phuong" name="phuong">
+                                <option value="0">Phường/Xã</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-add-shipping">Tính phí ship</button>
+                        <hr>
+                        <div class="d-grid gap-2">
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <a asp-controller="ThanhToan" asp-action="Index" class="btn btn-primary">Tiến hành thanh toán</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Đăng nhập để thanh toán</a>
+                            }
+                            <a class="btn btn-outline-danger" asp-controller="GioHang" asp-action="Clear">Xóa tất cả</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            Giỏ hàng của bạn đang trống. <a asp-controller="SanPham" asp-action="Index" class="alert-link">Tiếp tục mua sắm</a>
+        </div>
+    }
+</div>
+
+<style>
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #fdd504;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-primary {
+        background-color: #fdd504;
+        border-color: #fdd504;
+        color: #333;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #fcc500;
+            border-color: #fcc500;
+            color: #333;
+        }
+
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+        .btn-outline-danger:hover {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $(".btn-add-shipping").click(function () {
+                var tinh = $("#tinh").find('option:selected').text();
+                var quan = $("#quan").find('option:selected').text();
+                var phuong = $("#phuong").find('option:selected').text();
+
+                if (tinh == 'Tỉnh/Thành' || quan == 'Quận/Huyện' || phuong == 'Phường/Xã') {
+                    Swal.fire("Vui lòng chọn đầy đủ địa chỉ!");
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetShipping", "GioHang")",
+                        data: {tinh: tinh, quan: quan, phuong: phuong},
+                        success: function (result) {
+                            if (result.shippingPrice !== undefined) {
+                                var shippingPrice = result.shippingPrice;
+                                var totalPrice = @Model.TongTien + shippingPrice;
+                                $("#shippingPrice").text(shippingPrice.toLocaleString('vi-VN') + " ₫");
+                                $("#totalPrice").text(totalPrice.toLocaleString('vi-VN') + " ₫");
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function(data_tinh) {
+                if(data_tinh.error == 0) {
+                    $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                        $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
+                    });
+                }
+            });
+
+            // Lấy quận huyện khi chọn tỉnh
+            $("#tinh").change(function() {
+                var idtinh = $(this).val();
+                $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm', function(data_quan) {
+                    if(data_quan.error == 0) {
+                        $("#quan").html('<option value="0">Quận/Huyện</option>');
+                        $("#phuong").html('<option value="0">Phường/Xã</option>');
+                        $.each(data_quan.data, function (key_quan, val_quan) {
+                            $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
+                        });
+                    }
+                });
+            });
+
+            // Lấy phường xã khi chọn quận
+            $("#quan").change(function() {
+                var idquan = $(this).val();
+                $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm', function(data_phuong) {
+                    if(data_phuong.error == 0) {
+                        $("#phuong").html('<option value="0">Phường/Xã</option>');
+                        $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                            $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".btn-apply-coupon").click(function(){  
+                var coupon_value = $(".coupon-value").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetCoupon", "GioHang")",
+                    data: {coupon_value: coupon_value},
+                    success: function (result){
+                        if (result.success){
+                            Swal.fire(result.message);
+                            location.reload();
+                        }
+                        else {
+                            Swal.fire(result.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

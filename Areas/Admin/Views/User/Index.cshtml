@@ -1,0 +1,134 @@
+﻿@model IEnumerable<UserViewModel>
+@{
+    ViewData["title"] = "Danh sách User";
+    PhanTrang pager = ViewBag.Pager as PhanTrang ?? new PhanTrang();
+}
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Danh sách User</h3>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-area="Admin" asp-action="Create" asp-controller="User" class="btn btn-custom">
+            <i class="fas fa-user-plus me-2"></i>Thêm User
+        </a>
+        <div>Tổng số User: @pager.TotalItems</div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped" id="mytable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Tên User</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Role</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.UserId</td>
+                                <td>@user.UserName</td>
+                                <td>@user.Email</td>
+                                <td>@user.PhoneNumber</td>
+                                <td><span class="badge bg-info">@user.Role</span></td>
+                                <td>
+                                    @if (user.IsLocked)
+                                    {
+                                        <span class="badge bg-danger">Bị khóa đến @user.LockoutEndTime?.ToString("HH:mm dd/MM/yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@user.UserId">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@user.UserId">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </a>
+
+                                    @if (user.IsLocked)
+                                    {
+                                        <form asp-action="UnlockUser" asp-controller="User" method="post" class="d-inline">
+                                            <input type="hidden" name="userId" value="@user.UserId" />
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="fas fa-unlock"></i> Mở khóa
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <partial name="_Paging" model="@pager" />
+    </div>
+</div>
+
+<style>
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table th, .table td {
+            border: none;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,.075);
+    }
+
+    .btn-sm {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+    }
+
+    .badge {
+        font-size: 0.875em;
+        padding: 0.35em 0.65em;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        let table = new DataTable('#mytable');
+    </script>
+}

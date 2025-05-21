@@ -1,0 +1,142 @@
+﻿@model ContactModel
+
+<style>
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #fdd504;
+    }
+
+    .contact-card {
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        margin-bottom: 20px;
+    }
+
+    .contact-info {
+        padding: 20px;
+    }
+
+        .contact-info h4 {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .contact-info p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .contact-info strong {
+            color: #333;
+        }
+
+    .map-container {
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .contact-form {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+        .contact-form h4 {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .btn-primary {
+        background-color: #fdd504;
+        border: none;
+        color: #333;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+        .btn-primary:hover {
+            background-color: #fcc500;
+        }
+
+    @@media (max-width: 767px) {
+        .contact-card, .contact-form {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="section-title">Liên hệ với chúng tôi</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="contact-card">
+                <div class="contact-info">
+                    <h4>Thông tin liên hệ</h4>
+                    <p><strong>Tên:</strong> @Model.Name</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Mô tả:</strong> @Model.Description</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Logoimg))
+                    {
+                        <img src="~/media/contacts/@Model.Logoimg" alt="Logo" class="img-fluid mb-3" style="max-width: 200px;">
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="contact-card">
+                <div class="map-container">
+                    @Html.Raw(Model.Map)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="contact-form">
+                <h4>Gửi tin nhắn cho chúng tôi</h4>
+                <form>
+                    <div class="form-group">
+                        <label for="name">Họ và tên</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Tin nhắn</label>
+                        <textarea class="form-control" id="message" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,303 @@
+﻿@model ShippingModel
+@{
+    ViewData["title"] = "Tạo gói ship";
+}
+
+<div id="snow-container"></div>
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Quản lý gói ship</h3>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Thêm gói ship mới</h5>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Tỉnh/Thành phố</label>
+                        <select class="form-select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                            <option value="0">Chọn Tỉnh/Thành phố</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Quận/Huyện</label>
+                        <select class="form-select" id="quan" name="quan" title="Chọn Quận Huyện">
+                            <option value="0">Chọn Quận/Huyện</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Phường/Xã</label>
+                        <select class="form-select" id="phuong" name="phuong" title="Chọn Phường Xã">
+                            <option value="0">Chọn Phường/Xã</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Giá ship</label>
+                        <input asp-for="Price" id="price-shipping" class="form-control" />
+                    </div>
+
+                    <div class="form-group mt-4 text-center">
+                        <button type="button" class="btn btn-custom btn-add-shipping">Thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Danh sách gói ship</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="mytable">
+                            <thead>
+                                <tr>
+                                    <th>Thành phố</th>
+                                    <th>Quận</th>
+                                    <th>Phường/Xã</th>
+                                    <th>Giá ship</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var shipping in ViewBag.Shipping)
+                                {
+                                    <tr>
+                                        <td>@shipping.City</td>
+                                        <td>@shipping.District</td>
+                                        <td>@shipping.Ward</td>
+                                        <td>@shipping.Price.ToString("N0")</td>
+                                        <td>
+                                            <a href="@Url.Action("Delete","Shipping", new { id = shipping.Id })" class="btn btn-danger btn-sm">Xóa</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-fluid {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h3 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+    .table {
+        font-size: 14px;
+    }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+    #snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .snowflake {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+    }
+
+    @@keyframes fall {
+        0%
+
+    {
+        transform: translateY(-5vh) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(105vh) rotate(360deg);
+    }
+
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        let table = new DataTable ('#mytable')
+    </script>
+    <script>
+        $(".btn-add-shipping").click(function () {
+            var tinh = $("#tinh").find('option:selected').text();
+            var quan = $("#quan").find('option:selected').text();
+            var phuong = $("#phuong").find('option:selected').text();
+            var price = $("#price-shipping").val();
+
+            if (tinh == 'Tỉnh Thành' || quan == 'Quận Huyện' || phuong == 'Phường Xã' || price == '') {
+                Swal.fire("Làm ơn không bỏ trống");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("StoreShipping", "Shipping")",
+                    data: {tinh: tinh, quan: quan, phuong: phuong, price: price},
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire("Thêm vận chuyển thành công, load lại page để thấy data.");
+                        } else if (result.duplicate) {
+                            Swal.fire("Dữ liệu bị trùng lặp.");
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).ready(function() {
+            //Lấy tỉnh thành
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function(data_tinh) {
+                if(data_tinh.error == 0) {
+                   $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                      $("#tinh").append('<option value="'+val_tinh.id+'">'+val_tinh.full_name+'</option>');
+                   });
+                   $("#tinh").change(function(e) {
+                        var idtinh = $(this).val();
+                        //Lấy quận huyện
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/'+idtinh+'.htm', function(data_quan) {
+                            if(data_quan.error == 0) {
+                               $("#quan").html('<option value="0">Quận Huyện</option>');
+                               $("#phuong").html('<option value="0">Phường Xã</option>');
+                               $.each(data_quan.data, function (key_quan, val_quan) {
+                                  $("#quan").append('<option value="'+val_quan.id+'">'+val_quan.full_name+'</option>');
+                               });
+                            }
+                        });
+                   });
+
+                   //Lấy phường xã
+                   $("#quan").change(function(e) {
+                        var idquan = $(this).val();
+                        $.getJSON('https://esgoo.net/api-tinhthanh/3/'+idquan+'.htm', function(data_phuong) {
+                            if(data_phuong.error == 0) {
+                               $("#phuong").html('<option value="0">Phường Xã</option>');
+                               $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                  $("#phuong").append('<option value="'+val_phuong.id+'">'+val_phuong.full_name+'</option>');
+                               });
+                            }
+                        });
+                   });
+                }
+            });
+         });
+    </script>
+    <script>
+        // Snow effect script
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.width = `${Math.random() * 5 + 2}px`;
+            snowflake.style.height = snowflake.style.width;
+            snowflake.style.left = `${Math.random() * 100}vw`;
+            snowflake.style.opacity = Math.random();
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            snowflake.style.animationDelay = `${Math.random() * 5}s`;
+            return snowflake;
+        }
+
+        function snowfall() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflake = createSnowflake();
+            snowContainer.appendChild(snowflake);
+
+            snowflake.style.animation = `fall ${snowflake.style.animationDuration} linear ${snowflake.style.animationDelay} infinite`;
+
+            snowflake.addEventListener('animationiteration', () => {
+                snowflake.style.left = `${Math.random() * 100}vw`;
+            });
+        }
+
+        // Create initial snowflakes
+        for (let i = 0; i < 150; i++) {
+            setTimeout(snowfall, 20 * i);
+        }
+
+        // Continue creating new snowflakes
+        setInterval(snowfall, 200);
+    </script>
+}

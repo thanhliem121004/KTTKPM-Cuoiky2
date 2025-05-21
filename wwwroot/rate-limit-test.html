@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Limit Test</title>
+</head>
+<body>
+    <h1>Rate Limit Test</h1>
+    <button id="testButton">Test Rate Limit</button>
+    <div id="results"></div>
+
+    <script>
+        const testButton = document.getElementById('testButton');
+        const results = document.getElementById('results');
+        let requestCount = 0;
+
+        testButton.addEventListener('click', async () => {
+            results.innerHTML = ''; // Clear previous results
+            requestCount = 0;
+
+            for (let i = 0; i < 30; i++) {
+                await sendRequest();
+            }
+        });
+
+        async function sendRequest() {
+            requestCount++;
+            try {
+                const response = await fetch('/api/Test/test-rate-limit');
+                const result = `Request ${requestCount}: Status ${response.status}, ${await response.text()}<br>`;
+                results.innerHTML += result;
+            } catch (error) {
+                results.innerHTML += `Request ${requestCount}: Error - ${error.message}<br>`;
+            }
+            // Thêm độ trễ 200ms giữa các requests
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+    </script>
+</body>
+</html>

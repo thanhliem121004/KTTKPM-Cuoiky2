@@ -1,0 +1,50 @@
+﻿@model IEnumerable<E_commerceTechnologyWebsite.Models.UserActivity>
+
+@{
+    ViewData["Title"] = "User Activities";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">User Activities</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/Admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">User Activities</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            User Activities
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Path</th>
+                        <th>Timestamp</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var activity in Model)
+                    {
+                        <tr>
+                            <td>@activity.UserId</td>
+                            <td>@activity.Path</td>
+                            <td>@activity.Timestamp</td>
+                            <td>@activity.IpAddress</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#datatablesSimple').DataTable();
+        });
+    </script>
+}

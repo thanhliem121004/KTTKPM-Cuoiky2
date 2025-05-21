@@ -1,0 +1,631 @@
+﻿@model IEnumerable<SanPhamModel>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    .slider-container {
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .carousel-item {
+        height: 450px;
+    }
+
+        .carousel-item img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            filter: brightness(0.8);
+        }
+
+    .carousel-caption {
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        padding: 25px;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 70%;
+        width: auto;
+    }
+
+        .carousel-caption h5 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .carousel-caption p {
+            font-size: 18px;
+        }
+
+    .carousel-control-prev, .carousel-control-next {
+        width: 5%;
+        opacity: 0.8;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        padding: 25px;
+    }
+
+    .carousel-indicators {
+        bottom: 20px;
+    }
+
+        .carousel-indicators button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 5px;
+            background-color: #fff;
+            opacity: 0.5;
+        }
+
+            .carousel-indicators button.active {
+                opacity: 1;
+            }
+
+    .section-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+        margin: 50px 0 30px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #ffd400;
+        text-align: center;
+    }
+
+    .brand-filter {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 50px;
+    }
+
+    .brand-item {
+        width: 18%;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+        .brand-item:hover, .brand-item.active {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background-color: #ffd400;
+        }
+
+        .brand-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-item:hover img {
+            transform: scale(1.1);
+        }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .product-card {
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+    .product-image {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        background-color: #f8f8f8;
+    }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .product-info {
+        padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-title {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        height: 40px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 16px;
+        color: #d0021c;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .product-category, .product-brand {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 3px;
+    }
+
+    .product-rating {
+        color: #ffd400;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .product-status {
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: auto;
+    }
+
+    .product-action {
+        padding: 0 15px 15px;
+    }
+
+    .add-to-cart {
+        width: 100%;
+        background-color: #ffd400;
+        color: #333;
+        border: none;
+        padding: 8px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+    }
+
+        .add-to-cart:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+    .view-all {
+        display: inline-block;
+        margin-top: 40px;
+        padding: 15px 30px;
+        background-color: #ffd400;
+        color: #333;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+        .view-all:hover {
+            background-color: #ffc107;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .product-out-of-stock {
+        opacity: 0.7;
+    }
+
+        .product-out-of-stock .product-image img {
+            filter: grayscale(50%);
+        }
+
+    .product-inactive {
+        opacity: 0.5;
+    }
+
+        .product-inactive .product-image img {
+            filter: grayscale(100%);
+        }
+
+    .status-active {
+        color: #28a745;
+    }
+
+    .status-inactive {
+        color: #dc3545;
+    }
+
+    .out-of-stock {
+        background-color: #ff9800;
+        color: white;
+        width: 100%;
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .discontinued {
+        background-color: #f44336;
+        color: white;
+        width: 100%;
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    /* Toastr styles */
+    .toast-success {
+        background-color: #ffd400;
+        color: #333;
+    }
+
+    .toast-error {
+        background-color: #d0021c;
+    }
+
+    /* Snow effect styles */
+    #snow-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .snowflake {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+    }
+
+    @@keyframes fall {
+        0% {
+            transform: translateY(-5vh) rotate(0deg);
+        }
+
+        100% {
+            transform: translateY(105vh) rotate(360deg);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .brand-item {
+            width: 48%;
+            margin-bottom: 20px;
+        }
+
+        .carousel-item {
+            height: 300px;
+        }
+
+        .carousel-caption h5 {
+            font-size: 22px;
+        }
+
+        .carousel-caption p {
+            font-size: 16px;
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .product-image {
+            height: 150px;
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-title {
+            font-size: 12px;
+            height: 36px;
+        }
+
+        .product-price {
+            font-size: 14px;
+        }
+
+        .add-to-cart, .out-of-stock, .discontinued {
+            padding: 6px;
+            font-size: 11px;
+        }
+    }
+</style>
+
+<div id="snow-container"></div>
+
+<div class="container mt-4">
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["success"]
+        </div>
+    }
+
+    <!-- Slider -->
+    <div class="slider-container">
+        <div id="mainSlider" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#mainSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://baotinmobile.vn/uploads/2023/03/sl-iphone-14-promax.jpg.webp" class="d-block w-100" alt="Khuyến mãi đặc biệt">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Khuyến mãi đặc biệt</h5>
+                        <p>Giảm giá lên đến 50% cho các sản phẩm công nghệ mới nhất</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://channel.mediacdn.vn/2019/1/10/photo-1-15470930389662024470690.jpg" class="d-block w-100" alt="Sản phẩm mới">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Sản phẩm mới</h5>
+                        <p>Khám phá các sản phẩm công nghệ mới nhất trên thị trường</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://cdn.tgdd.vn/Files/2022/10/15/1479303/logitechtuhaogoidaylabieutuongduocsangtaolai_1280x720-800-resize.png" class="d-block w-100" alt="Dịch vụ hậu mãi">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Dịch vụ hậu mãi</h5>
+                        <p>Chính sách bảo hành và hỗ trợ khách hàng tốt nhất</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Thương hiệu nổi bật -->
+    <h2 class="section-title">Thương hiệu nổi bật</h2>
+    <div class="brand-filter">
+        <a href="#" class="brand-item" data-brand="all">
+            <img src="~/images/All-logo.jpg" alt="Tất cả">
+            <span>Tất cả</span>
+        </a>
+        <a href="#" class="brand-item" data-brand="apple">
+            <img src="~/images/apple-logo.jpg" alt="Apple">
+            <span>Apple</span>
+        </a>
+        <a href="#" class="brand-item" data-brand="samsung">
+            <img src="~/images/samsungmobile_logo.jpg" alt="Samsung">
+            <span>Samsung</span>
+        </a>
+        <a href="#" class="brand-item" data-brand="realme">
+            <img src="~/images/realme-logo.jpg" alt="Realme">
+            <span>Realme</span>
+        </a>
+        <a href="#" class="brand-item" data-brand="oppo">
+            <img src="~/images/oppo-logo.jpg" alt="Oppo">
+            <span>Oppo</span>
+        </a>
+    </div>
+
+    <h2 class="section-title">Sản phẩm nổi bật</h2>
+    <div id="product-list" class="product-grid">
+        @foreach (var item in Model)
+        {
+            <div class="product-card @(!item.IsActive ? "product-inactive" : "") @(item.IsActive && item.Quantity == 0 ? "product-out-of-stock" : "")" data-brand="@item.ThuongHieu.Name.ToLower()">
+                <a asp-action="ChiTiet" asp-controller="SanPham" asp-route-Id="@item.Id" class="text-decoration-none">
+                    <div class="product-image">
+                        <img src="~/media/products/@item.Image" alt="@item.Name">
+                    </div>
+                    <div class="product-info">
+                        <h5 class="product-title" title="@item.Name">@item.Name</h5>
+                        <p class="product-price">@item.Price.ToString("N0") ₫</p>
+                        <p class="product-category">@item.TheLoai.Name</p>
+                        <p class="product-brand">Thương hiệu: @item.ThuongHieu.Name</p>
+                        <div class="product-rating">
+                            @for (int i = 0; i < 4; i++)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(10)</span>
+                        </div>
+                        <p class="product-status @(item.IsActive ? "status-active" : "status-inactive")">
+                            @(item.IsActive ? "Còn kinh doanh" : "Ngừng kinh doanh")
+                        </p>
+                    </div>
+                </a>
+                <div class="product-action">
+                    @if (item.IsActive)
+                    {
+                        if (item.Quantity > 0)
+                        {
+                            <a href="#" class="add-to-cart" data-id="@item.Id" aria-label="Thêm vào giỏ hàng">
+                                <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="out-of-stock" aria-label="Sản phẩm hết hàng">
+                                Tạm hết hàng
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="discontinued" aria-label="Sản phẩm đã ngừng kinh doanh">
+                            Ngưng sản xuất
+                        </span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/Home" class="view-all">Xem tất cả sản phẩm</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Cấu hình Toastr
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+            // Xử lý sự kiện thêm vào giỏ hàng
+            $('.add-to-cart').click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+                $.ajax({
+                    url: '/GioHang/Them',
+                    type: 'POST',
+                    data: { Id: productId },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success('Sản phẩm đã được thêm vào giỏ hàng.', 'Thành công!');
+                        } else {
+                            toastr.error(data.message || 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.', 'Lỗi!');
+                        }
+                    },
+                    error: function () {
+                        toastr.error('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.', 'Lỗi!');
+                    }
+                });
+            });
+        });
+
+        // Xử lý lọc thương hiệu
+        document.addEventListener('DOMContentLoaded', function () {
+            const brandItems = document.querySelectorAll('.brand-item');
+            const productItems = document.querySelectorAll('.product-card');
+
+            brandItems.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const brand = this.dataset.brand;
+
+                    productItems.forEach(product => {
+                        if (brand === 'all' || product.dataset.brand === brand) {
+                            product.style.display = 'block';
+                        } else {
+                            product.style.display = 'none';
+                        }
+                    });
+
+                    // Highlight selected brand
+                    brandItems.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        // Snow effect
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.width = `${Math.random() * 10 + 5}px`;
+            snowflake.style.height = snowflake.style.width;
+            snowflake.style.left = `${Math.random() * window.innerWidth}px`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            snowflake.style.opacity = Math.random();
+            return snowflake;
+        }
+
+        function snowfall() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflake = createSnowflake();
+            snowContainer.appendChild(snowflake);
+
+            snowflake.style.animation = `fall ${snowflake.style.animationDuration} linear`;
+
+            snowflake.addEventListener('animationend', () => {
+                snowflake.remove();
+            });
+        }
+
+        // Create snowflakes every 100ms
+        setInterval(snowfall, 100);
+    </script>
+}

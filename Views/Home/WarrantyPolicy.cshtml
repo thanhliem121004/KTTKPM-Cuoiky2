@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Chính sách bảo hành";
+}
+
+<div class="container warranty-policy">
+    <h1>Chính sách bảo hành</h1>
+
+    <div class="warranty-period">
+        <h2>Thời hạn bảo hành</h2>
+        <p>ShopTech cam kết bảo hành cho các sản phẩm của chúng tôi trong thời hạn:</p>
+        <ul>
+            <li><i class="fas fa-mobile-alt"></i> Điện thoại: 12 tháng</li>
+            <li><i class="fas fa-laptop"></i> Laptop: 24 tháng</li>
+            <li><i class="fas fa-headphones"></i> Phụ kiện: 6 tháng</li>
+        </ul>
+    </div>
+
+    <div class="warranty-conditions">
+        <h2>Điều kiện bảo hành</h2>
+        <ul>
+            <li>Sản phẩm còn trong thời hạn bảo hành</li>
+            <li>Tem bảo hành và số serial còn nguyên vẹn</li>
+            <li>Sản phẩm bị lỗi do nhà sản xuất</li>
+        </ul>
+    </div>
+
+    <div class="warranty-process">
+        <h2>Quy trình bảo hành</h2>
+        <ol>
+            <li>Liên hệ với trung tâm bảo hành của ShopTech</li>
+            <li>Mang sản phẩm đến trung tâm bảo hành hoặc gửi qua đường bưu điện</li>
+            <li>Nhân viên kỹ thuật sẽ kiểm tra và xác định lỗi</li>
+            <li>Tiến hành sửa chữa hoặc thay thế linh kiện</li>
+            <li>Thông báo cho khách hàng khi hoàn thành</li>
+        </ol>
+    </div>
+</div>
+
+<style>
+    .warranty-policy {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .warranty-policy h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #ffd400;
+        padding-bottom: 10px;
+    }
+
+    .warranty-period, .warranty-conditions, .warranty-process {
+        margin-top: 30px;
+    }
+
+    .warranty-period ul, .warranty-conditions ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .warranty-period li, .warranty-conditions li {
+        margin-bottom: 10px;
+    }
+
+    .warranty-period i {
+        color: #ffd400;
+        margin-right: 10px;
+    }
+
+    .warranty-process ol {
+        counter-reset: item;
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .warranty-process li {
+        counter-increment: item;
+        margin-bottom: 10px;
+    }
+
+    .warranty-process li::before {
+        content: counter(item);
+        background: #ffd400;
+        border-radius: 50%;
+        color: #2c3e50;
+        width: 1.5em;
+        height: 1.5em;
+        text-align: center;
+        display: inline-block;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+</style>

@@ -1,0 +1,642 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using E_commerceTechnologyWebsite.Models
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<AppUserModel> UserManager
+@inject SignInManager<AppUserModel> SignInManager
+@inject E_commerceTechnologyWebsite.KhoLuuTru.DataContext DataContext
+
+@{
+    var contact = await DataContext.Contact.FirstOrDefaultAsync();
+    var logoPath = contact != null && !string.IsNullOrEmpty(contact.Logoimg)
+        ? $"/media/contacts/{contact.Logoimg}"
+        : "/images/Shop_Techhh.png";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] | ShopTech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="~/js/protect-source.js" asp-append-version="true"></script>
+    <!--phát hiện DevTools-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setInterval(() => {
+                if (window.outerHeight - window.innerHeight > 160 ||
+                    window.outerWidth - window.innerWidth > 160) {
+                    document.body.style.display = "none";
+                    document.documentElement.style.display = "none";
+
+                }
+            }, 300);
+        });
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #ffd400;
+            --secondary-color: #333;
+            --text-color: #333;
+            --background-color: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+        }
+
+        .logo {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+            .logo img {
+                height: 50px;
+                margin-right: 15px;
+            }
+
+            .logo .com {
+                font-size: 18px;
+                margin-left: 5px;
+            }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 12px 45px 12px 20px;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+            }
+
+            .search-box button {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                font-size: 22px;
+                color: #333;
+            }
+
+        .header-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .header-action-item {
+            display: flex;
+            align-items: center;
+            margin-left: 25px;
+            color: var(--secondary-color);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            .header-action-item i {
+                font-size: 24px;
+                margin-right: 8px;
+            }
+
+            .header-action-item span {
+                font-size: 14px;
+            }
+
+        .location-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .main-menu {
+            background-color: var(--primary-color);
+            padding: 10px 0;
+        }
+
+            .main-menu .nav {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .main-menu .nav-item {
+                flex: 0 0 auto;
+            }
+
+            .main-menu .nav-link {
+                display: flex;
+                align-items: center;
+                color: var(--secondary-color);
+                padding: 8px 12px;
+                font-weight: 500;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+                .main-menu .nav-link i {
+                    font-size: 18px;
+                    margin-right: 8px;
+                }
+
+                .main-menu .nav-link span {
+                    font-size: 14px;
+                }
+
+                .main-menu .nav-link:hover {
+                    background-color: rgba(255,255,255,0.2);
+                }
+
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 40px 0 20px;
+        }
+
+            .footer h5 {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .footer ul {
+                padding-left: 0;
+                list-style-type: none;
+            }
+
+                .footer ul li {
+                    margin-bottom: 10px;
+                }
+
+                    .footer ul li a {
+                        color: var(--text-color);
+                        text-decoration: none;
+                        transition: color 0.3s ease;
+                    }
+
+                        .footer ul li a:hover {
+                            color: var(--primary-color);
+                        }
+
+        .footer-bottom {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+            .social-icons a:hover {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+            }
+
+        @@media (max-width: 1200px) {
+            .main-menu .nav
+
+        {
+            justify-content: flex-start;
+        }
+
+        .main-menu .nav-link {
+            padding: 8px 10px;
+        }
+
+            .main-menu .nav-link span {
+                font-size: 12px;
+            }
+
+        }
+
+        @@media (max-width: 768px) {
+            .header .col-md-3, .header .col-md-5, .header .col-md-4
+
+        {
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+            .logo img {
+                height: 40px;
+            }
+
+        .main-menu .nav-link {
+            padding: 8px 8px;
+        }
+
+            .main-menu .nav-link i {
+                font-size: 16px;
+                margin-right: 5px;
+            }
+
+            .main-menu .nav-link span {
+                font-size: 11px;
+            }
+            /* Thêm CSS cho ông già Noel */
+            .santa-decoration {
+                position: fixed;
+                top: 50%;
+                width: 150px;
+                height: 200px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                z-index: 1000;
+            }
+
+            #santa-left {
+                left: 0;
+                background-image: url('/images/santa-left.png');
+                transform: translateY(-50%);
+            }
+
+            #santa-right {
+                right: 0;
+                background-image: url('/images/santa-right.png');
+                transform: translateY(-50%) scaleX(-1);
+            }
+        @@keyframes santaBounce {
+                0%, 100%
+
+        {
+            transform: translateY(-50%);
+        }
+
+        50% {
+            transform: translateY(-60%);
+        }
+
+        }
+
+        #santa-left {
+            animation: santaBounce 2s ease-in-out infinite;
+        }
+
+        #santa-right {
+            animation: santaBounce 2s ease-in-out infinite reverse;
+        }
+
+        @@media (max-width: 1200px) {
+            .santa-decoration
+
+        {
+            width: 100px;
+            height: 133px;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .santa-decoration
+
+        {
+            display: none;
+        }
+
+        }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <a href="/" class="logo">
+                        <img src="/images/Shop_Techhh.png" alt="ShopTech Logo" class="img-fluid">
+                        ShopTech<span class="com">.com</span>
+                    </a>
+                </div>
+                <div class="col-md-5">
+                    <form asp-controller="SanPham" asp-action="Search" method="get">
+                        <div class="search-box">
+                            <input type="text" placeholder="Bạn tìm gì..." name="searchTerm">
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <div class="header-actions">
+                        <a href="#" class="header-action-item location-item" data-bs-toggle="modal" data-bs-target="#locationModal">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="selectedLocation">Chọn địa chỉ</span>
+                        </a>
+                        <a asp-controller="GioHang" asp-action="Index" class="header-action-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Giỏ hàng</span>
+                        </a>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div class="dropdown">
+                                <a class="header-action-item dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Tài khoản</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Tài khoản: @User.Identity.Name</a></li>
+                                    @{
+                                        var user = await UserManager.GetUserAsync(User);
+                                        if (user != null && user.RoleId == "7901f61a-b8fe-44cd-98d5-8749f4bf8c98")
+                                        {
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="SanPham" asp-action="Index">Quản lý</a></li>
+                                        }
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="header-action-item">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Đăng nhập</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="main-menu">
+            <div class="container">
+                <ul class="nav justify-content-between">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="SanPham" asp-action="Index">
+                            <i class="fas fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-store"></i>
+                            <span>Cửa hàng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="TheLoai" asp-action="Index" asp-route-Slug="điện-thoại">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Điện thoại</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="TheLoai" asp-action="Index" asp-route-Slug="laptop">
+                            <i class="fas fa-laptop"></i>
+                            <span>Laptop</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="TheLoai" asp-action="Index" asp-route-Slug="phụ-kiện">
+                            <i class="fas fa-headphones"></i>
+                            <span>Phụ kiện</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="PurchaseGuide">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Hướng dẫn mua hàng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="WarrantyPolicy">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Chính sách bảo hành</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="About">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Giới thiệu công ty</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Contact">
+                            <i class="fas fa-envelope"></i>
+                            <span>Liên hệ</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="py-4">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5><i class="fas fa-info-circle me-2"></i>Hỗ trợ khách hàng</h5>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="HelpCenter"><i class="fas fa-question-circle me-2"></i>Trung tâm trợ giúp</a></li>
+                        <li><a asp-controller="Home" asp-action="PurchaseGuide"><i class="fas fa-shopping-bag me-2"></i>Hướng dẫn mua hàng</a></li>
+                        <li><a asp-controller="Home" asp-action="WarrantyPolicy"><i class="fas fa-shield-alt me-2"></i>Chính sách bảo hành</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5><i class="fas fa-building me-2"></i>Về ShopTech</h5>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="About"><i class="fas fa-info me-2"></i>Giới thiệu công ty</a></li>
+                        <li><a asp-controller="Home" asp-action="Careers"><i class="fas fa-user-tie me-2"></i>Tuyển dụng</a></li>
+                        <li><a asp-controller="Home" asp-action="TermsOfUse"><i class="fas fa-file-contract me-2"></i>Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5><i class="fas fa-phone-alt me-2"></i>Liên hệ với chúng tôi</h5>
+                    <p><i class="fas fa-phone me-2"></i>Hotline: 1900 1234</p>
+                    <p><i class="fas fa-envelope me-2"></i>Email: support@shoptech.com</p>
+                    <p><a asp-controller="Home" asp-action="Contact"><i class="fas fa-envelope me-2"></i>Gửi liên hệ</a></p>
+                </div>
+                <div class="col-md-3">
+                    <h5><i class="fas fa-share-alt me-2"></i>Kết nối với chúng tôi</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/ShoptechKenya" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/shoptechmedia" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/shoptech___/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/TechShop-1688" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="text-center mb-0"><i class="far fa-copyright me-2"></i>2023 ShopTech. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="santa-left" class="santa-decoration"></div>
+    <div id="santa-right" class="santa-decoration"></div>
+    <!-- Modal Chọn địa chỉ -->
+    <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="locationModalLabel">Chọn địa chỉ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Chọn tỉnh/thành phố</h6>
+                            <select id="citySelect" class="form-select">
+                                <option value="">Chọn tỉnh/thành phố</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Chọn quận/huyện</h6>
+                            <select id="districtSelect" class="form-select">
+                                <option value="">Chọn quận/huyện</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="loadingSpinner" class="text-center mt-3" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="saveLocation">Lưu địa chỉ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script src="~/js/xss.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const apiUrl = 'https://provinces.open-api.vn/api/';
+
+            function showSpinner() {
+                $('#loadingSpinner').show();
+            }
+
+            function hideSpinner() {
+                $('#loadingSpinner').hide();
+            }
+
+            function fetchCities() {
+                showSpinner();
+                $.ajax({
+                    url: apiUrl + '?depth=1',
+                    method: 'GET',
+                    success: function (response) {
+                        $('#citySelect').empty().append('<option value="">Chọn tỉnh/thành phố</option>');
+                        response.forEach(city => {
+                            $('#citySelect').append(`<option value="${city.code}">${city.name}</option>`);
+                        });
+                        hideSpinner();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching cities:', error);
+                        hideSpinner();
+                        alert('Có lỗi xảy ra khi tải danh sách tỉnh/thành phố. Vui lòng thử lại sau.');
+                    }
+                });
+            }
+
+            function fetchDistricts(cityCode) {
+                showSpinner();
+                $.ajax({
+                    url: apiUrl + 'p/' + cityCode + '?depth=2',
+                    method: 'GET',
+                    success: function (response) {
+                        $('#districtSelect').empty().append('<option value="">Chọn quận/huyện</option>');
+                        response.districts.forEach(district => {
+                            $('#districtSelect').append(`<option value="${district.code}">${district.name}</option>`);
+                        });
+                        hideSpinner();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching districts:', error);
+                        hideSpinner();
+                        alert('Có lỗi xảy ra khi tải danh sách quận/huyện. Vui lòng thử lại sau.');
+                    }
+                });
+            }
+
+            $('#locationModal').on('show.bs.modal', function (e) {
+                fetchCities();
+            });
+
+            $('#citySelect').change(function () {
+                const selectedCityCode = $(this).val();
+                if (selectedCityCode) {
+                    fetchDistricts(selectedCityCode);
+                } else {
+                    $('#districtSelect').empty().append('<option value="">Chọn quận/huyện</option>');
+                }
+            });
+
+            $('#saveLocation').click(function () {
+                const selectedCity = $('#citySelect option:selected').text();
+                const selectedDistrict = $('#districtSelect option:selected').text();
+
+                if (selectedCity && selectedDistrict && selectedCity !== 'Chọn tỉnh/thành phố' && selectedDistrict !== 'Chọn quận/huyện') {
+                    const fullLocation = `${selectedCity}, ${selectedDistrict}`;
+                    $('#selectedLocation').text(fullLocation);
+                    $('#locationModal').modal('hide');
+
+                    // Lưu địa chỉ vào localStorage
+                    localStorage.setItem('selectedLocation', fullLocation);
+                } else {
+                    alert('Vui lòng chọn đầy đủ tỉnh/thành phố và quận/huyện');
+                }
+            });
+
+            // Kiểm tra và hiển thị địa chỉ đã lưu khi tải trang
+            const savedLocation = localStorage.getItem('selectedLocation');
+            if (savedLocation) {
+                $('#selectedLocation').text(savedLocation);
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

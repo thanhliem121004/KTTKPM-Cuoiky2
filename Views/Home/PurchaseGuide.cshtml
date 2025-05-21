@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Hướng dẫn mua hàng";
+}
+
+<div class="container purchase-guide">
+    <h1>Hướng dẫn mua hàng</h1>
+
+    <div class="steps">
+        <h2>Các bước mua hàng tại ShopTech</h2>
+        <ol>
+            <li>Chọn sản phẩm bạn muốn mua</li>
+            <li>Thêm sản phẩm vào giỏ hàng</li>
+            <li>Kiểm tra giỏ hàng và tiến hành thanh toán</li>
+            <li>Điền thông tin giao hàng</li>
+            <li>Chọn phương thức thanh toán</li>
+            <li>Xác nhận đơn hàng</li>
+        </ol>
+    </div>
+
+    <div class="payment-methods">
+        <h2>Phương thức thanh toán</h2>
+        <ul>
+            <li><i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng (COD)</li>
+            <li><i class="fas fa-university"></i> Chuyển khoản ngân hàng</li>
+            <li><i class="fas fa-wallet"></i> Thanh toán qua ví điện tử</li>
+            <li><i class="fas fa-credit-card"></i> Thẻ tín dụng/ghi nợ</li>
+        </ul>
+    </div>
+
+    <div class="delivery-time">
+        <h2>Thời gian giao hàng</h2>
+        <p>Thời gian giao hàng thông thường từ 2-5 ngày làm việc, tùy thuộc vào địa chỉ giao hàng của bạn.</p>
+    </div>
+</div>
+
+<style>
+    .purchase-guide {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .purchase-guide h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #ffd400;
+        padding-bottom: 10px;
+    }
+
+    .steps, .payment-methods, .delivery-time {
+        margin-top: 30px;
+    }
+
+    .steps ol {
+        counter-reset: item;
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .steps li {
+        counter-increment: item;
+        margin-bottom: 10px;
+    }
+
+    .steps li::before {
+        content: counter(item);
+        background: #ffd400;
+        border-radius: 50%;
+        color: #2c3e50;
+        width: 1.5em;
+        height: 1.5em;
+        text-align: center;
+        display: inline-block;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    .payment-methods ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .payment-methods li {
+        margin-bottom: 10px;
+    }
+
+    .payment-methods i {
+        color: #ffd400;
+        margin-right: 10px;
+    }
+</style>

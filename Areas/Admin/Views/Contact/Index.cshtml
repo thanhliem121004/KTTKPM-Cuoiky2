@@ -1,0 +1,175 @@
+﻿@model IEnumerable<E_commerceTechnologyWebsite.Models.ContactModel>
+@{
+    ViewData["title"] = "Quản lý thông tin liên hệ";
+    int totalContacts = ViewBag.TotalContacts;
+}
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4 text-center">Quản lý thông tin liên hệ</h3>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-action="Create" class="btn btn-custom" asp-controller="Contact">
+            <i class="fas fa-plus-circle me-2"></i>Thêm thông tin liên hệ
+        </a>
+        <div>Tổng số thông tin liên hệ: @totalContacts</div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped" id="mytable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Mô tả</th>
+                                <th>Logo</th>
+                                <th>Bản đồ</th>
+                                <th>Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>@item.Name</strong></td>
+                                    <td>@item.Email</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@Html.Raw(item.Description)</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Logoimg))
+                                        {
+                                            <img src="~/media/contacts/@item.Logoimg" class="contact-logo" alt="@item.Name" />
+                                        }
+                                        else
+                                        {
+                                            <span>Chưa có logo</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#mapModal-@item.Name">
+                                            <i class="fas fa-map-marker-alt"></i> Xem bản đồ
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" class="btn btn-warning btn-sm mb-1" asp-controller="Contact" asp-route-Name="@item.Name">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div class="modal fade" id="mapModal-@item.Name" tabindex="-1" aria-labelledby="mapModalLabel-@item.Name" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mapModalLabel-@item.Name">Bản đồ - @item.Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="map-container">
+                                @Html.Raw(item.Map)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Không có thông tin liên hệ nào.</p>
+    }
+</div>
+
+<style>
+    .btn-custom {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    .contact-logo {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table th, .table td {
+            border: none;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,.075);
+    }
+
+    .btn-sm {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+    }
+
+    .map-container {
+        position: relative;
+        padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+        height: 0;
+        overflow: hidden;
+    }
+
+        .map-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        let table = new DataTable('#mytable');
+
+        // Xử lý sự kiện khi modal mở
+        $('.modal').on('shown.bs.modal', function () {
+            var mapContainer = $(this).find('.map-container');
+            var iframe = mapContainer.find('iframe');
+
+            // Tải lại iframe để đảm bảo bản đồ hiển thị đúng
+            iframe.attr('src', iframe.attr('src'));
+        });
+    </script>
+}
